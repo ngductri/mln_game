@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gia Đình Văn Hóa - Game Lựa Chọn</title>
+    <link rel="stylesheet" href="mln131_font.css">
+</head>
+<body>
+
+<div id="home-screen" class="home-screen">
+    <h1 class="game-title">Gia Đình Văn Hóa</h1>
+    <div class="menu-btns">
+        <button onclick="startGame()">Bắt đầu</button>
+        <button onclick="showGuide()">Hướng dẫn</button>
+    </div>
+</div>
+
+<div id="guide-modal" class="modal-overlay hidden">
+    <div class="modal-plaque">
+        <h2>Cách Chơi 🎮</h2>
+        <p>Chào mừng bạn đến với <strong>Gia Đình Văn Hóa</strong>!</p>
+        <p>Bạn sẽ đối mặt với các tình huống gia đình thường ngày. Mỗi lựa chọn sẽ ảnh hưởng đến 2 chỉ số:</p>
+        <ul style="list-style-type: none; padding: 0;">
+            <li><strong>🏠 Hòa khí:</strong> Sự êm ấm, hạnh phúc thực sự bên trong.</li>
+            <li><strong>🏆 Danh tiếng:</strong> Vẻ bề ngoài, thể diện với xã hội.</li>
+        </ul>
+        <p><em>*Ai đạt 100 điểm một trong hai chỉ số trước sẽ kết thúc game!</em></p>
+        <button onclick="closeGuide()" class="guide-btn">Đã hiểu!</button>
+    </div>
+</div>
+
+<div id="level-counter" class="level-badge hidden">Tình huống: 1/10</div>
+
+<button id="floating-home-btn" onclick="goHome()" class="btn-home-floating hidden">Trang chủ</button>
+
+<div id="game-container" class="hidden">
+    <div class="stats">
+        <div class="stat-item">🏠 Hòa khí: <span id="harmony">50</span></div>
+        <div class="stat-item">🏆 Danh tiếng: <span id="fame">50</span></div>
+    </div>
+
+    <div id="content">
+        <p id="question">Đang tải tình huống...</p>
+        <div class="btn-container">
+            <button onclick="handleChoice('a')" id="btnA">Lựa chọn A</button>
+            <button onclick="handleChoice('b')" id="btnB">Lựa chọn B</button>
+        </div>
+        <p id="message"></p>
+    </div>
+
+    <div id="result" class="hidden">
+        <h2>Kết thúc!</h2>
+        <p id="final-message"></p>
+        <button onclick="goHome()">Quay lại Trang chủ</button>
+    </div>
+</div>
+
+<script>
+    // --- LOGIC GIAO DIỆN ---
+    window.onload = function() {
+        showGuide();
+    }
+
+    function showGuide() {
+        document.getElementById('guide-modal').classList.remove('hidden');
+    }
+
+    function closeGuide() {
+        document.getElementById('guide-modal').classList.add('hidden');
+    }
+
+    function startGame() {
+        document.getElementById('home-screen').classList.add('hidden');
+        document.getElementById('game-container').classList.remove('hidden');
+        
+        document.getElementById('floating-home-btn').classList.remove('hidden'); 
+        document.getElementById('level-counter').classList.remove('hidden'); 
+        
+        updateUI(); 
+    }
+
+    function goHome() {
+        currentStep = 0;
+        harmony = 50;
+        fame = 50;
+        updateUI();
+
+        document.getElementById('game-container').classList.add('hidden');
+        document.getElementById('result').classList.add('hidden');
+        document.getElementById('content').classList.remove('hidden');
+        document.getElementById('home-screen').classList.remove('hidden');
+        
+        document.getElementById('floating-home-btn').classList.add('hidden');
+        document.getElementById('level-counter').classList.add('hidden');
+    }
+
+    // --- LOGIC GAME CHÍNH VỚI 10 TÌNH HUỐNG ---
+    const scenarios = [
+        {
+            text: "Hàng xóm sang mượn đồ nhưng nói lời khó nghe. Bạn làm gì?",
+            a: { text: "Nhẫn nhịn cho mượn để giữ tiếng tốt", harmony: -10, fame: 20 },
+            b: { text: "Thẳng thắn từ chối để bảo vệ cảm xúc", harmony: 20, fame: -10 }
+        },
+        {
+            text: "Gia đình có mâu thuẫn nội bộ khi khách sắp đến chơi.",
+            a: { text: "Giả vờ vui vẻ trước mặt khách", harmony: -20, fame: 30 },
+            b: { text: "Xin phép khách giải quyết việc riêng", harmony: 15, fame: -15 }
+        },
+        {
+            text: "Con cái đạt điểm kém, bạn sợ hàng xóm chê cười.",
+            a: { text: "Bắt con đi học thêm bù đầu để lấy mặt mũi", harmony: -30, fame: 20 },
+            b: { text: "An ủi con và chấp nhận khuyết điểm", harmony: 30, fame: -10 }
+        },
+        {
+            text: "Họ hàng ở quê ngỏ ý vay một số tiền lớn để làm đám cưới linh đình cho con.",
+            a: { text: "Bấm bụng cho vay để nở mày nở mặt với họ hàng", harmony: -25, fame: 25 },
+            b: { text: "Từ chối khéo vì tài chính gia đình đang eo hẹp", harmony: 20, fame: -20 }
+        },
+        {
+            text: "Con bạn đam mê học lập trình làm game, nhưng họ hàng bảo nghề đó 'lông bông', khuyên bắt học Y hoặc Kinh tế.",
+            a: { text: "Ép con đổi ngành để bằng bạn bằng bè", harmony: -30, fame: 20 },
+            b: { text: "Bảo vệ và đầu tư cho đam mê thực sự của con", harmony: 25, fame: -15 }
+        },
+        {
+            text: "Chuyến du lịch gia đình đầy rắc rối và cãi vã, nhưng đến lúc chụp ảnh đăng Facebook...",
+            a: { text: "Bắt cả nhà cười tươi tạo dáng để sống ảo", harmony: -15, fame: 20 },
+            b: { text: "Cất điện thoại đi và cùng nhau gỡ rối tơ lòng", harmony: 25, fame: -10 }
+        },
+        {
+            text: "Một thành viên lớn tuổi trong nhà có sở thích lắp ráp LEGO để giải tỏa căng thẳng, hàng xóm thấy vậy bèn xì xầm chê cười.",
+            a: { text: "Cấm chơi tiếp để tránh miệng lưỡi thế gian", harmony: -25, fame: 15 },
+            b: { text: "Mua thêm cho một bộ thật to để chơi chung", harmony: 25, fame: -20 }
+        },
+        {
+            text: "Gần đến Tết, thấy nhà đối diện mua cây đào trăm triệu, bạn đời của bạn cũng muốn mua một cây tương tự dù phải vay mượn.",
+            a: { text: "Vay tiền mua luôn cho đỡ 'lép vế'", harmony: -20, fame: 30 },
+            b: { text: "Khuyên nhủ sắm sửa vừa phải, quây quần gói bánh chưng", harmony: 20, fame: -15 }
+        },
+        {
+            text: "Trong một buổi giỗ họ, mâm cỗ phân biệt 'mâm trên, mâm dưới' khiến người nhà bạn cảm thấy không được tôn trọng.",
+            a: { text: "Nuốt cục tức vào trong, cắn răng chịu đựng cho qua chuyện", harmony: -20, fame: 15 },
+            b: { text: "Lên tiếng góp ý thẳng thắn để đòi lại công bằng", harmony: 15, fame: -25 }
+        },
+        {
+            text: "Bạn vừa gây ra một sai lầm lớn ảnh hưởng đến tài chính gia đình. Bạn sẽ đối mặt thế nào?",
+            a: { text: "Tìm mọi cách giấu giếm để giữ hình ảnh trụ cột gia đình", harmony: -35, fame: 10 },
+            b: { text: "Thành thật xin lỗi cả nhà và cùng nhau tìm cách khắc phục", harmony: 30, fame: -30 }
+        }
+    ];
+
+    let currentStep = 0;
+    let harmony = 50;
+    let fame = 50;
+
+    function updateUI() {
+        if (currentStep < scenarios.length) {
+            const s = scenarios[currentStep];
+            document.getElementById('question').innerText = s.text;
+            document.getElementById('btnA').innerText = s.a.text;
+            document.getElementById('btnB').innerText = s.b.text;
+            document.getElementById('harmony').innerText = harmony;
+            document.getElementById('fame').innerText = fame;
+            
+            document.getElementById('level-counter').innerText = `Tình huống: ${currentStep + 1} / ${scenarios.length}`;
+        } else {
+            showEndGame();
+        }
+    }
+
+    function handleChoice(choice) {
+        const effects = scenarios[currentStep][choice];
+        harmony += effects.harmony;
+        fame += effects.fame;
+        
+        currentStep++;
+        
+        if (harmony >= 100 || fame >= 100 || currentStep >= scenarios.length) {
+            showEndGame();
+        } else {
+            updateUI();
+        }
+    }
+
+    function showEndGame() {
+        document.getElementById('content').classList.add('hidden');
+        document.getElementById('result').classList.remove('hidden');
+        
+        document.getElementById('floating-home-btn').classList.add('hidden');
+        document.getElementById('level-counter').classList.add('hidden');
+        
+        let msg = "Bài học: Chẳng có gia đình nào hoàn hảo 100%. ";
+        if (fame > harmony) {
+            msg += "Bạn quá chú trọng vẻ bề ngoài (danh tiếng), nhưng bên trong (hòa khí) đang dần rỗng tuếch.";
+        } else {
+            msg += "Bạn đã chọn sống thật với hạnh phúc bên trong thay vì chạy theo những lời khen sáo rỗng.";
+        }
+        document.getElementById('final-message').innerText = msg;
+    }
+</script>
+
+</body>
+</html>

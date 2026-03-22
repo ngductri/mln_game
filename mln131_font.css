@@ -1,0 +1,332 @@
+/* =========================================
+   1. IMPORT FONT & BODY
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    height: 100vh;
+    overflow: hidden; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    background: linear-gradient(-45deg, #ff9a9e, #fecfef, #a1c4fd, #c2e9fb);
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* =========================================
+   2. MÀN HÌNH TRANG CHỦ
+   ========================================= */
+.home-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.game-title {
+    font-size: 3.5rem;
+    color: #2c3e50;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.7);
+    text-align: center;
+}
+
+.menu-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 280px; 
+}
+
+#home-screen button {
+    background-color: #2c3e50;
+    color: white;
+    padding: 18px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+#home-screen button:hover {
+    background-color: #34495e;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* =========================================
+   3. BẢNG HƯỚNG DẪN (POP-UP)
+   ========================================= */
+.modal-overlay {
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal-plaque {
+    background-color: #f8f1e0; 
+    background-image: url('https://www.transparenttextures.com/patterns/paper.patterns.png'); 
+    border: 8px solid #5a402a; 
+    border-radius: 15px;
+    padding: 40px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5); 
+    animation: popIn 0.3s ease-out;
+    color: #3e3e3e;
+    box-sizing: border-box;
+}
+
+.modal-plaque h2 {
+    margin-top: 0;
+    color: #c0392b; 
+    font-size: 2.2rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.modal-plaque p {
+    line-height: 1.6;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.modal-plaque ul {
+    text-align: left; 
+    margin-bottom: 25px; 
+    display: inline-block;
+}
+
+.modal-plaque li {
+    margin-bottom: 10px;
+}
+
+.modal-plaque .guide-btn {
+    background-color: #5a402a; 
+    color: #f8f1e0; 
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* =========================================
+   4. GIAO DIỆN CHƠI GAME
+   ========================================= */
+#game-container {
+    background: rgba(255, 255, 255, 0.3); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    width: 90%; 
+    max-width: 500px; 
+    text-align: center;
+    color: #2c3e50; 
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    gap: 10px;
+}
+
+.stat-item {
+    background: rgba(255, 255, 255, 0.6);
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+    flex: 1; 
+}
+
+#question {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    min-height: 80px; 
+    line-height: 1.5;
+}
+
+.btn-container {
+    display: grid;
+    gap: 15px;
+}
+
+#game-container button:not(.btn-home-floating) {
+    background: #ffffff;
+    color: #764ba2;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+#result h2 {
+    font-size: 2rem;
+    color: #c0392b; 
+    margin-bottom: 20px;
+}
+
+#final-message {
+    line-height: 1.6;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+/* =========================================
+   5. NÚT TRANG CHỦ GÓC PHẢI
+   ========================================= */
+.btn-home-floating {
+    position: fixed; 
+    top: 30px;       
+    right: 40px;     
+    background: rgba(255, 255, 255, 0.4);
+    color: #2c3e50;
+    padding: 15px 30px; 
+    font-size: 1.2rem;  
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 999; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.btn-home-floating:hover {
+    background: rgba(255, 255, 255, 0.9); 
+    transform: translateY(-3px) scale(1.05); 
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+/* =========================================
+   6. BỘ ĐẾM MÀN CHƠI GÓC TRÁI
+   ========================================= */
+.level-badge {
+    position: fixed;
+    top: 30px;
+    left: 40px;
+    background: rgba(255, 255, 255, 0.5);
+    color: #2c3e50;
+    padding: 15px 25px;
+    font-size: 1.1rem;
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-weight: bold;
+    z-index: 999;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    display: inline-flex;
+    align-items: center;
+}
+
+/* =========================================
+   7. RESPONSIVE (DÀNH RIÊNG CHO ĐIỆN THOẠI)
+   ========================================= */
+@media (max-width: 600px) {
+    .game-title {
+        font-size: 2.2rem; 
+        margin-bottom: 30px;
+    }
+
+    .modal-plaque {
+        padding: 25px 20px; 
+        border-width: 5px;
+    }
+
+    .modal-plaque h2 {
+        font-size: 1.8rem;
+    }
+
+    .modal-plaque p, .modal-plaque ul {
+        font-size: 0.95rem;
+    }
+
+    #game-container {
+        padding: 25px 20px; 
+    }
+
+    .stat-item {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+
+    #question {
+        font-size: 1.1rem;
+        min-height: 60px;
+    }
+
+    #game-container button:not(.btn-home-floating) {
+        font-size: 0.9rem;
+        padding: 12px 15px;
+    }
+
+    .btn-home-floating {
+        top: 15px;
+        right: 15px;
+        padding: 10px 15px;
+        font-size: 0.95rem;
+        border-radius: 10px;
+    }
+
+    .level-badge {
+        top: 15px;
+        left: 15px;
+        padding: 10px 15px;
+        font-size: 0.95rem;
+        border-radius: 10px;
+    }
+}
