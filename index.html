@@ -8,8 +8,16 @@
 </head>
 <body>
 
+<div id="scare-container" class="hidden scare-container">
+    <img src="your_image.jpg" alt="Cảnh báo!" class="scare-img">
+</div>
+
 <div id="home-screen" class="home-screen">
-    <h1 class="game-title">Gia Đình Văn Hóa</h1>
+    <h1 class="game-title">
+        <span style="font-size: 0.5em; display: block; margin-bottom: -10px; color: #fff; text-shadow: none; letter-spacing: 1px;">Chào mừng tới</span>
+        Gia Đình Văn Hóa
+    </h1>
+    
     <div class="menu-btns">
         <button onclick="startGame()">Bắt đầu</button>
         <button onclick="showGuide()">Hướng dẫn</button>
@@ -30,7 +38,7 @@
     </div>
 </div>
 
-<div id="level-counter" class="level-badge hidden">Tình huống: 1/10</div>
+<div id="level-counter" class="level-badge hidden">Tình huống: 1/11</div>
 
 <button id="floating-home-btn" onclick="goHome()" class="btn-home-floating hidden">Trang chủ</button>
 
@@ -52,31 +60,21 @@
     <div id="result" class="hidden">
         <h2>Kết thúc!</h2>
         <p id="final-message"></p>
-        <button onclick="goHome()">Quay lại Trang chủ</button>
+        <button onclick="goHome()">Chơi lại từ đầu</button>
     </div>
 </div>
 
 <script>
-    // --- LOGIC GIAO DIỆN ---
-    window.onload = function() {
-        showGuide();
-    }
+    window.onload = function() { showGuide(); }
 
-    function showGuide() {
-        document.getElementById('guide-modal').classList.remove('hidden');
-    }
-
-    function closeGuide() {
-        document.getElementById('guide-modal').classList.add('hidden');
-    }
+    function showGuide() { document.getElementById('guide-modal').classList.remove('hidden'); }
+    function closeGuide() { document.getElementById('guide-modal').classList.add('hidden'); }
 
     function startGame() {
         document.getElementById('home-screen').classList.add('hidden');
         document.getElementById('game-container').classList.remove('hidden');
-        
         document.getElementById('floating-home-btn').classList.remove('hidden'); 
         document.getElementById('level-counter').classList.remove('hidden'); 
-        
         updateUI(); 
     }
 
@@ -84,6 +82,9 @@
         currentStep = 0;
         harmony = 50;
         fame = 50;
+        previousHarmony = 50; 
+        document.documentElement.style.setProperty('--danger', 0); 
+        
         updateUI();
 
         document.getElementById('game-container').classList.add('hidden');
@@ -95,63 +96,68 @@
         document.getElementById('level-counter').classList.add('hidden');
     }
 
-    // --- LOGIC GAME CHÍNH VỚI 10 TÌNH HUỐNG ---
     const scenarios = [
         {
-            text: "Hàng xóm sang mượn đồ nhưng nói lời khó nghe. Bạn làm gì?",
-            a: { text: "Nhẫn nhịn cho mượn để giữ tiếng tốt", harmony: -10, fame: 20 },
-            b: { text: "Thẳng thắn từ chối để bảo vệ cảm xúc", harmony: 20, fame: -10 }
+            text: "Cả nhà đang ăn, nhưng ai cũng cắm mặt vào điện thoại. Mẹ nhìn bạn như chờ bạn nói gì đó.",
+            a: { text: "Tiếp tục lướt điện thoại (vì đang chat chuyện quan trọng)", harmony: -8, fame: 3 },
+            b: { text: "Cất điện thoại, chủ động mở câu chuyện", harmony: 10, fame: -2 }
         },
         {
-            text: "Gia đình có mâu thuẫn nội bộ khi khách sắp đến chơi.",
-            a: { text: "Giả vờ vui vẻ trước mặt khách", harmony: -20, fame: 30 },
-            b: { text: "Xin phép khách giải quyết việc riêng", harmony: 15, fame: -15 }
+            text: "Bạn vừa thi trượt một môn quan trọng. Ba mẹ đang rất kỳ vọng.",
+            a: { text: "Giấu đi, đợi sửa sai rồi nói", harmony: -10, fame: 5 },
+            b: { text: "Nói thật ngay", harmony: 10, fame: -3 }
         },
         {
-            text: "Con cái đạt điểm kém, bạn sợ hàng xóm chê cười.",
-            a: { text: "Bắt con đi học thêm bù đầu để lấy mặt mũi", harmony: -30, fame: 20 },
-            b: { text: "An ủi con và chấp nhận khuyết điểm", harmony: 30, fame: -10 }
+            text: "Ba mẹ không thích người bạn thân của bạn.",
+            a: { text: "Vẫn tiếp tục chơi với bạn", harmony: -7, fame: 6 },
+            b: { text: "Giữ khoảng cách", harmony: 8, fame: -2 }
         },
         {
-            text: "Họ hàng ở quê ngỏ ý vay một số tiền lớn để làm đám cưới linh đình cho con.",
-            a: { text: "Bấm bụng cho vay để nở mày nở mặt với họ hàng", harmony: -25, fame: 25 },
-            b: { text: "Từ chối khéo vì tài chính gia đình đang eo hẹp", harmony: 20, fame: -20 }
+            text: "Bạn được offer học/làm ở nơi rất xa, nhưng gia đình cần bạn ở gần.",
+            a: { text: "Đi vì tương lai", harmony: -12, fame: 12 },
+            b: { text: "Ở lại vì gia đình", harmony: 12, fame: -5 }
         },
         {
-            text: "Con bạn đam mê học lập trình làm game, nhưng họ hàng bảo nghề đó 'lông bông', khuyên bắt học Y hoặc Kinh tế.",
-            a: { text: "Ép con đổi ngành để bằng bạn bằng bè", harmony: -30, fame: 20 },
-            b: { text: "Bảo vệ và đầu tư cho đam mê thực sự của con", harmony: 25, fame: -15 }
+            text: "Bạn vô tình làm hỏng một món đồ giá trị trong nhà.",
+            a: { text: "Giấu đi xem như không biết", harmony: -9, fame: 4 },
+            b: { text: "Nói thật và nhận lỗi", harmony: 9, fame: -2 }
         },
         {
-            text: "Chuyến du lịch gia đình đầy rắc rối và cãi vã, nhưng đến lúc chụp ảnh đăng Facebook...",
-            a: { text: "Bắt cả nhà cười tươi tạo dáng để sống ảo", harmony: -15, fame: 20 },
-            b: { text: "Cất điện thoại đi và cùng nhau gỡ rối tơ lòng", harmony: 25, fame: -10 }
+            text: "Ba mẹ so sánh bạn với “con nhà người ta”.",
+            a: { text: "Im lặng chịu đựng", harmony: 5, fame: -3 },
+            b: { text: "Nói ra cảm xúc của mình", harmony: -5, fame: 5 }
         },
         {
-            text: "Một thành viên lớn tuổi trong nhà có sở thích lắp ráp LEGO để giải tỏa căng thẳng, hàng xóm thấy vậy bèn xì xầm chê cười.",
-            a: { text: "Cấm chơi tiếp để tránh miệng lưỡi thế gian", harmony: -25, fame: 15 },
-            b: { text: "Mua thêm cho một bộ thật to để chơi chung", harmony: 25, fame: -20 }
+            text: "Bạn muốn đi chơi đêm nhưng biết chắc ba mẹ sẽ không cho.",
+            a: { text: "Nói dối để được đi", harmony: -10, fame: 6 },
+            b: { text: "Nói thật", harmony: 8, fame: -3 }
         },
         {
-            text: "Gần đến Tết, thấy nhà đối diện mua cây đào trăm triệu, bạn đời của bạn cũng muốn mua một cây tương tự dù phải vay mượn.",
-            a: { text: "Vay tiền mua luôn cho đỡ 'lép vế'", harmony: -20, fame: 30 },
-            b: { text: "Khuyên nhủ sắm sửa vừa phải, quây quần gói bánh chưng", harmony: 20, fame: -15 }
+            text: "Gia đình gặp khó khăn tài chính, bạn đang có một khoản tiền riêng.",
+            a: { text: "Giữ tiền cho kế hoạch cá nhân", harmony: -12, fame: 8 },
+            b: { text: "Đưa tiền hỗ trợ gia đình", harmony: 15, fame: -5 }
         },
         {
-            text: "Trong một buổi giỗ họ, mâm cỗ phân biệt 'mâm trên, mâm dưới' khiến người nhà bạn cảm thấy không được tôn trọng.",
-            a: { text: "Nuốt cục tức vào trong, cắn răng chịu đựng cho qua chuyện", harmony: -20, fame: 15 },
-            b: { text: "Lên tiếng góp ý thẳng thắn để đòi lại công bằng", harmony: 15, fame: -25 }
+            text: "Gia đình muốn bạn theo ngành ổn định, nhưng bạn có đam mê riêng.",
+            a: { text: "Nghe theo gia đình", harmony: 10, fame: 3 },
+            b: { text: "Quyết tâm theo đam mê", harmony: -8, fame: 10 }
         },
         {
-            text: "Bạn vừa gây ra một sai lầm lớn ảnh hưởng đến tài chính gia đình. Bạn sẽ đối mặt thế nào?",
-            a: { text: "Tìm mọi cách giấu giếm để giữ hình ảnh trụ cột gia đình", harmony: -35, fame: 10 },
-            b: { text: "Thành thật xin lỗi cả nhà và cùng nhau tìm cách khắc phục", harmony: 30, fame: -30 }
+            text: "Bạn có cơ hội đổi đời nhưng phải xa gia đình nhiều năm.",
+            a: { text: "Chọn thành công cá nhân", harmony: -15, fame: 15 },
+            b: { text: "Chọn gia đình", harmony: 15, fame: -7 }
+        },
+        {
+            text: "Bạn đang xem nội dung 18+ trên máy tính, ba/mẹ bất ngờ bước vào.",
+            a: { text: "Tắt nhanh, giả vờ không có gì", harmony: -6, fame: 2 },
+            b: { text: "Thừa nhận và giải thích", harmony: 8, fame: -2 }
         }
     ];
 
     let currentStep = 0;
     let harmony = 50;
     let fame = 50;
+    let previousHarmony = 50; 
 
     function updateUI() {
         if (currentStep < scenarios.length) {
@@ -163,6 +169,21 @@
             document.getElementById('fame').innerText = fame;
             
             document.getElementById('level-counter').innerText = `Tình huống: ${currentStep + 1} / ${scenarios.length}`;
+
+            let dangerLevel = (50 - harmony) / 50;
+            if (dangerLevel < 0) dangerLevel = 0;
+            if (dangerLevel > 1) dangerLevel = 1;
+            
+            document.documentElement.style.setProperty('--danger', dangerLevel);
+
+            if (harmony <= 30 && harmony < previousHarmony) {
+                document.body.classList.add('glitch-effect');
+                setTimeout(() => {
+                    document.body.classList.remove('glitch-effect');
+                }, 600); 
+            }
+            previousHarmony = harmony; 
+
         } else {
             showEndGame();
         }
@@ -188,6 +209,16 @@
         
         document.getElementById('floating-home-btn').classList.add('hidden');
         document.getElementById('level-counter').classList.add('hidden');
+
+        // --- CẬP NHẬT: JUMP SCARE CHỈ DIỄN RA TRONG 0.5 GIÂY (500ms) ---
+        if (harmony < 40) {
+            const scareContainer = document.getElementById('scare-container');
+            scareContainer.classList.remove('hidden');
+            
+            setTimeout(() => {
+                scareContainer.classList.add('hidden');
+            }, 500); 
+        }
         
         let msg = "Bài học: Chẳng có gia đình nào hoàn hảo 100%. ";
         if (fame > harmony) {
