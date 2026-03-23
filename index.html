@@ -9,7 +9,7 @@
 <body>
 
 <div id="scare-container" class="hidden scare-container">
-    <img src="your_image.jpg" alt="Cảnh báo!" class="scare-img">
+    <img src="your_image.png" alt="Cảnh báo!" class="scare-img">
 </div>
 
 <div id="home-screen" class="home-screen">
@@ -33,12 +33,12 @@
             <li><strong>🏠 Hòa khí:</strong> Sự êm ấm, hạnh phúc thực sự bên trong.</li>
             <li><strong>🏆 Danh tiếng:</strong> Vẻ bề ngoài, thể diện với xã hội.</li>
         </ul>
-        <p><em>*Ai đạt 100 điểm một trong hai chỉ số trước sẽ kết thúc game!</em></p>
+        <p><em>*Trò chơi kết thúc khi bạn đạt 100 điểm ở một trong hai chỉ số, hoặc vượt qua hết 21 tình huống!</em></p>
         <button onclick="closeGuide()" class="guide-btn">Đã hiểu!</button>
     </div>
 </div>
 
-<div id="level-counter" class="level-badge hidden">Tình huống: 1/11</div>
+<div id="level-counter" class="level-badge hidden">Tình huống: 1/21</div>
 
 <button id="floating-home-btn" onclick="goHome()" class="btn-home-floating hidden">Trang chủ</button>
 
@@ -59,7 +59,7 @@
 
     <div id="result" class="hidden">
         <h2>Kết thúc!</h2>
-        <p id="final-message"></p>
+        <p id="final-message" style="white-space: pre-wrap; font-size: 1.1rem; line-height: 1.6;"></p>
         <button onclick="goHome()">Chơi lại từ đầu</button>
     </div>
 </div>
@@ -83,7 +83,7 @@
         harmony = 50;
         fame = 50;
         previousHarmony = 50; 
-        document.documentElement.style.setProperty('--danger', 0); 
+        document.documentElement.style.setProperty('--danger', 0); // Reset màu nền về sáng
         
         updateUI();
 
@@ -96,61 +96,112 @@
         document.getElementById('level-counter').classList.add('hidden');
     }
 
+    // DANH SÁCH 21 TÌNH HUỐNG
     const scenarios = [
         {
             text: "Cả nhà đang ăn, nhưng ai cũng cắm mặt vào điện thoại. Mẹ nhìn bạn như chờ bạn nói gì đó.",
-            a: { text: "Tiếp tục lướt điện thoại (vì đang chat chuyện quan trọng)", harmony: -8, fame: 3 },
-            b: { text: "Cất điện thoại, chủ động mở câu chuyện", harmony: 10, fame: -2 }
+            a: { text: "Tiếp tục lướt điện thoại (vì đang chat chuyện quan trọng)", harmony: -15, fame: 10 },
+            b: { text: "Cất điện thoại, chủ động mở câu chuyện", harmony: 15, fame: -10 }
         },
         {
             text: "Bạn vừa thi trượt một môn quan trọng. Ba mẹ đang rất kỳ vọng.",
-            a: { text: "Giấu đi, đợi sửa sai rồi nói", harmony: -10, fame: 5 },
-            b: { text: "Nói thật ngay", harmony: 10, fame: -3 }
+            a: { text: "Giấu đi, đợi sửa sai rồi nói", harmony: -15, fame: 15 },
+            b: { text: "Nói thật ngay", harmony: 20, fame: -10 }
         },
         {
             text: "Ba mẹ không thích người bạn thân của bạn.",
-            a: { text: "Vẫn tiếp tục chơi với bạn", harmony: -7, fame: 6 },
-            b: { text: "Giữ khoảng cách", harmony: 8, fame: -2 }
+            a: { text: "Vẫn tiếp tục chơi với bạn", harmony: -10, fame: 15 },
+            b: { text: "Giữ khoảng cách", harmony: 15, fame: -10 }
         },
         {
             text: "Bạn được offer học/làm ở nơi rất xa, nhưng gia đình cần bạn ở gần.",
-            a: { text: "Đi vì tương lai", harmony: -12, fame: 12 },
-            b: { text: "Ở lại vì gia đình", harmony: 12, fame: -5 }
+            a: { text: "Đi vì tương lai", harmony: -20, fame: 25 },
+            b: { text: "Ở lại vì gia đình", harmony: 20, fame: -15 }
         },
         {
             text: "Bạn vô tình làm hỏng một món đồ giá trị trong nhà.",
-            a: { text: "Giấu đi xem như không biết", harmony: -9, fame: 4 },
-            b: { text: "Nói thật và nhận lỗi", harmony: 9, fame: -2 }
+            a: { text: "Giấu đi xem như không biết", harmony: -15, fame: 10 },
+            b: { text: "Nói thật và nhận lỗi", harmony: 15, fame: -5 }
         },
         {
             text: "Ba mẹ so sánh bạn với “con nhà người ta”.",
-            a: { text: "Im lặng chịu đựng", harmony: 5, fame: -3 },
-            b: { text: "Nói ra cảm xúc của mình", harmony: -5, fame: 5 }
+            a: { text: "Im lặng chịu đựng", harmony: 10, fame: -5 },
+            b: { text: "Nói ra cảm xúc của mình", harmony: -10, fame: 15 }
         },
         {
             text: "Bạn muốn đi chơi đêm nhưng biết chắc ba mẹ sẽ không cho.",
-            a: { text: "Nói dối để được đi", harmony: -10, fame: 6 },
-            b: { text: "Nói thật", harmony: 8, fame: -3 }
+            a: { text: "Nói dối để được đi", harmony: -15, fame: 15 },
+            b: { text: "Nói thật", harmony: 15, fame: -10 }
         },
         {
             text: "Gia đình gặp khó khăn tài chính, bạn đang có một khoản tiền riêng.",
-            a: { text: "Giữ tiền cho kế hoạch cá nhân", harmony: -12, fame: 8 },
-            b: { text: "Đưa tiền hỗ trợ gia đình", harmony: 15, fame: -5 }
+            a: { text: "Giữ tiền cho kế hoạch cá nhân", harmony: -20, fame: 15 },
+            b: { text: "Đưa tiền hỗ trợ gia đình", harmony: 25, fame: -15 }
         },
         {
             text: "Gia đình muốn bạn theo ngành ổn định, nhưng bạn có đam mê riêng.",
-            a: { text: "Nghe theo gia đình", harmony: 10, fame: 3 },
-            b: { text: "Quyết tâm theo đam mê", harmony: -8, fame: 10 }
+            a: { text: "Nghe theo gia đình", harmony: 15, fame: 10 },
+            b: { text: "Quyết tâm theo đam mê", harmony: -15, fame: 20 }
         },
         {
             text: "Bạn có cơ hội đổi đời nhưng phải xa gia đình nhiều năm.",
-            a: { text: "Chọn thành công cá nhân", harmony: -15, fame: 15 },
-            b: { text: "Chọn gia đình", harmony: 15, fame: -7 }
+            a: { text: "Chọn thành công cá nhân", harmony: -25, fame: 25 },
+            b: { text: "Chọn gia đình", harmony: 25, fame: -15 }
         },
         {
             text: "Bạn đang xem nội dung 18+ trên máy tính, ba/mẹ bất ngờ bước vào.",
-            a: { text: "Tắt nhanh, giả vờ không có gì", harmony: -6, fame: 2 },
-            b: { text: "Thừa nhận và giải thích", harmony: 8, fame: -2 }
+            a: { text: "Tắt nhanh, giả vờ không có gì", harmony: -10, fame: 5 },
+            b: { text: "Thừa nhận và giải thích", harmony: 15, fame: -10 }
+        },
+        {
+            text: "Tết đến, họ hàng dắt con cháu sang chơi đông đúc. Tài chính năm nay của bạn rất eo hẹp.",
+            a: { text: "Lì xì thật nhiều để giữ thể diện với họ hàng", harmony: -20, fame: 20 },
+            b: { text: "Lì xì ít nhưng mừng tuổi bằng những lời chúc chân thành", harmony: 15, fame: -15 }
+        },
+        {
+            text: "Trong mâm cỗ họ, các bác trai ngồi nhậu, các bác gái và thanh niên nữ bị gọi xuống bếp dọn dẹp.",
+            a: { text: "Bảo chị em gái cứ làm đi cho vui lòng người lớn", harmony: -15, fame: 15 },
+            b: { text: "Rủ rê cả mấy anh em trai cùng xuống bếp rửa bát", harmony: 20, fame: -20 }
+        },
+        {
+            text: "Con em trong nhà nhuộm tóc màu sáng và mặc đồ phá cách. Họ hàng đến chơi và xì xầm đánh giá.",
+            a: { text: "Bắt em đi nhuộm lại tóc đen và thay đồ ngay lập tức", harmony: -20, fame: 15 },
+            b: { text: "Nhẹ nhàng giải thích đó là sở thích và bênh vực em", harmony: 20, fame: -15 }
+        },
+        {
+            text: "Hàng xóm khoe con họ vừa mua được ô tô tiền tỷ. Bạn đời của bạn tỏ vẻ chạnh lòng.",
+            a: { text: "Cố vay mượn mua một chiếc xe trả góp để không thua kém", harmony: -25, fame: 25 },
+            b: { text: "An ủi bạn đời, trân trọng những gì cả hai đang có", harmony: 20, fame: -10 }
+        },
+        {
+            text: "Ông bà nội kiên quyết bắt cháu nhỏ uống một bài thuốc nam truyền miệng không rõ nguồn gốc.",
+            a: { text: "Cho cháu uống một chút để ông bà vui lòng", harmony: -20, fame: 10 },
+            b: { text: "Cương quyết từ chối và giải thích theo cơ sở y khoa", harmony: 15, fame: -15 }
+        },
+        {
+            text: "Thú cưng trong nhà lỡ phóng uế đúng lúc khách quý bước vào cửa.",
+            a: { text: "Đánh đuổi thú cưng và rối rít xin lỗi khách", harmony: -15, fame: 10 },
+            b: { text: "Bình tĩnh dọn dẹp, cười xòa coi như chuyện vui nhỏ", harmony: 15, fame: -10 }
+        },
+        {
+            text: "Nhà có đám cưới, họ hàng thúc ép phải làm 100 mâm cỗ đãi làng, nhưng ngân sách chỉ đủ 30 mâm.",
+            a: { text: "Cắn răng đi vay mượn làm lớn cho 'mát mặt' với làng xóm", harmony: -25, fame: 25 },
+            b: { text: "Chỉ mời gia đình cốt cán và bạn bè thân thiết", harmony: 25, fame: -20 }
+        },
+        {
+            text: "Bạn vô tình đăng một đoạn video hài hước nhưng hơi 'dìm hàng' người nhà lên Facebook. Hàng xóm bắt đầu bàn tán.",
+            a: { text: "Xóa ngay lập tức và cáu gắt với người nhà", harmony: -15, fame: 15 },
+            b: { text: "Giữ lại làm kỷ niệm và cùng cả nhà ngồi cười", harmony: 15, fame: -15 }
+        },
+        {
+            text: "Bạn phát hiện anh/chị của mình đang lén lút quen người yêu mà gia đình rất ác cảm.",
+            a: { text: "Lập tức mách lại với ba mẹ để cấm cản", harmony: -20, fame: 15 },
+            b: { text: "Giữ bí mật và động viên anh/chị tự tìm cách thuyết phục", harmony: 20, fame: -10 }
+        },
+        {
+            text: "Một người thân trong nhà thừa nhận họ đang bị trầm cảm nặng và muốn đi khám tâm lý.",
+            a: { text: "Bảo họ chỉ là 'yếu đuối', cấm đi khám vì sợ hàng xóm dị nghị", harmony: -30, fame: 15 },
+            b: { text: "Lắng nghe, ôm họ và lập tức tìm bác sĩ hỗ trợ", harmony: 30, fame: -20 }
         }
     ];
 
@@ -170,12 +221,13 @@
             
             document.getElementById('level-counter').innerText = `Tình huống: ${currentStep + 1} / ${scenarios.length}`;
 
+            // TÍNH TOÁN ĐỘ TỐI CỦA NỀN
             let dangerLevel = (50 - harmony) / 50;
             if (dangerLevel < 0) dangerLevel = 0;
             if (dangerLevel > 1) dangerLevel = 1;
-            
             document.documentElement.style.setProperty('--danger', dangerLevel);
 
+            // HIỆU ỨNG GLITCH
             if (harmony <= 30 && harmony < previousHarmony) {
                 document.body.classList.add('glitch-effect');
                 setTimeout(() => {
@@ -194,9 +246,15 @@
         harmony += effects.harmony;
         fame += effects.fame;
         
+        // CHẶN ĐIỂM TỪ 0 ĐẾN 100
+        if (harmony > 100) harmony = 100;
+        if (harmony < 0) harmony = 0;
+        if (fame > 100) fame = 100;
+        if (fame < 0) fame = 0;
+        
         currentStep++;
         
-        if (harmony >= 100 || fame >= 100 || currentStep >= scenarios.length) {
+        if (harmony === 100 || fame === 100 || currentStep >= scenarios.length) {
             showEndGame();
         } else {
             updateUI();
@@ -204,13 +262,17 @@
     }
 
     function showEndGame() {
+        // ĐỒNG BỘ UI TRƯỚC KHI HIỆN KẾT THÚC
+        document.getElementById('harmony').innerText = harmony;
+        document.getElementById('fame').innerText = fame;
+
         document.getElementById('content').classList.add('hidden');
         document.getElementById('result').classList.remove('hidden');
         
         document.getElementById('floating-home-btn').classList.add('hidden');
         document.getElementById('level-counter').classList.add('hidden');
 
-        // --- CẬP NHẬT: JUMP SCARE CHỈ DIỄN RA TRONG 0.5 GIÂY (500ms) ---
+        // HIỆU ỨNG JUMP SCARE (0.5 GIÂY)
         if (harmony < 40) {
             const scareContainer = document.getElementById('scare-container');
             scareContainer.classList.remove('hidden');
@@ -220,12 +282,26 @@
             }, 500); 
         }
         
-        let msg = "Bài học: Chẳng có gia đình nào hoàn hảo 100%. ";
-        if (fame > harmony) {
-            msg += "Bạn quá chú trọng vẻ bề ngoài (danh tiếng), nhưng bên trong (hòa khí) đang dần rỗng tuếch.";
-        } else {
-            msg += "Bạn đã chọn sống thật với hạnh phúc bên trong thay vì chạy theo những lời khen sáo rỗng.";
+        // TỔNG KẾT VÀ BÀI HỌC
+        let msg = `TỔNG KẾT: Hòa khí [${harmony}/100] - Danh tiếng [${fame}/100]\n\n`;
+        
+        if (harmony === 100) {
+            msg += "🏆 CHIẾN THẮNG TUYỆT ĐỐI! 🏆\nBạn đã đạt 100 điểm Hòa khí.\nBạn xây dựng được một gia đình cực kỳ viên mãn, thấu hiểu và gắn kết, mặc kệ những lời đàm tiếu bên ngoài!";
+        } 
+        else if (fame === 100) {
+            msg += "🏆 CHIẾN THẮNG DANH VỌNG! 🏆\nBạn đã đạt 100 điểm Danh tiếng.\nTrong mắt xã hội và họ hàng, gia đình bạn là chuẩn mực của sự hoàn hảo và thành đạt!";
+        } 
+        else {
+            msg += "KẾT THÚC CHẶNG ĐƯỜNG!\nBài học: Chẳng có gia đình nào hoàn hảo 100%.\n";
+            if (fame > harmony) {
+                msg += "Bạn khá chú trọng vẻ bề ngoài và thể diện, nhưng bên trong gia đình đang dần xuất hiện những khoảng trống.";
+            } else if (harmony > fame) {
+                msg += "Bạn đã chọn sống thật với hạnh phúc bên trong thay vì chạy theo những lời khen sáo rỗng của xã hội.";
+            } else {
+                msg += "Bạn giữ được sự cân bằng khá tốt giữa thể diện với xã hội và tình cảm gia đình!";
+            }
         }
+        
         document.getElementById('final-message').innerText = msg;
     }
 </script>
