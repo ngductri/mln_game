@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gia Đình Văn Hóa - Game Lựa Chọn</title>
+    <link rel="stylesheet" href="mln131_font.css">
+</head>
+<body>
+
+<div id="scare-container" class="hidden scare-container">
+    <img src="your_image.png" alt="Cảnh báo!" class="scare-img">
+</div>
+
+<div id="home-screen" class="home-screen">
+    <h1 class="game-title">
+        <span style="font-size: 0.5em; display: block; margin-bottom: -10px; color: #fff; text-shadow: none; letter-spacing: 1px;">Chào mừng tới</span>
+        Gia Đình Văn Hóa
+    </h1>
+    
+    <div class="menu-btns">
+        <button onclick="startGame()">Bắt đầu</button>
+        <button onclick="showGuide()">Hướng dẫn</button>
+    </div>
+</div>
+
+<div id="guide-modal" class="modal-overlay hidden">
+    <div class="modal-plaque">
+        <h2>Cách Chơi 🎮</h2>
+        <p>Chào mừng bạn đến với <strong>Gia Đình Văn Hóa</strong>!</p>
+        <p>Bạn sẽ vào vai "Nóc nhà", đưa ra quyết định ảnh hưởng đến 4 chỉ số sinh tồn của gia đình:</p>
+        <ul style="list-style-type: none; padding: 0;">
+            <li>💰 <strong>Quỹ Gia Đình:</strong> Khởi điểm 3,000k. Đừng để vỡ nợ!</li>
+            <li>❤️ <strong>Thể lực Mẹ:</strong> Sức chịu đựng. Hết sức là Game Over.</li>
+            <li>🏠 <strong>Hòa khí:</strong> Sự êm ấm, hạnh phúc thực sự bên trong.</li>
+            <li>🏆 <strong>Danh tiếng:</strong> Vẻ bề ngoài, thể diện với xã hội.</li>
+        </ul>
+        <p><em>*Trò chơi kết thúc NGAY LẬP TỨC khi bạn đạt 100 điểm Hòa khí/Danh tiếng, hoặc để cạn kiệt Thể Lực/Tiền Bạc!</em></p>
+        <button onclick="closeGuide()" class="guide-btn">Đã hiểu!</button>
+    </div>
+</div>
+
+<div id="level-counter" class="level-badge hidden">Tình huống: 1/31</div>
+
+<button id="floating-home-btn" onclick="goHome()" class="btn-home-floating hidden">Trang chủ</button>
+
+<div id="game-container" class="hidden">
+    <div class="stats">
+        <div class="stat-item">💰 Quỹ: <span id="fund">3000</span>k</div>
+        <div class="stat-item">❤️ Thể lực: <span id="stamina">100</span></div>
+        <div class="stat-item">🏠 Hòa khí: <span id="harmony">50</span></div>
+        <div class="stat-item">🏆 Danh tiếng: <span id="fame">50</span></div>
+    </div>
+
+    <div id="content">
+        <p id="question">Đang tải tình huống...</p>
+        <div class="btn-container">
+            <button onclick="handleChoice('a')" id="btnA">Lựa chọn A</button>
+            <button onclick="handleChoice('b')" id="btnB">Lựa chọn B</button>
+        </div>
+        <p id="message"></p>
+    </div>
+
+    <div id="result" class="hidden">
+        <h2>Kết thúc!</h2>
+        <p id="final-message" style="white-space: pre-wrap; font-size: 1.1rem; line-height: 1.6;"></p>
+        <button onclick="goHome()">Chơi lại từ đầu</button>
+    </div>
+</div>
+
+<script>
+    window.onload = function() { showGuide(); }
+
+    function showGuide() { document.getElementById('guide-modal').classList.remove('hidden'); }
+    function closeGuide() { document.getElementById('guide-modal').classList.add('hidden'); }
+
+    // --- KHỞI TẠO CHỈ SỐ ---
+    let fund = 3000;
+    let stamina = 100;
+    let harmony = 50;
+    let fame = 50;
+    let currentStep = 0;
+    let previousHarmony = 50; 
+
+    function startGame() {
+        document.getElementById('home-screen').classList.add('hidden');
+        document.getElementById('game-container').classList.remove('hidden');
+        document.getElementById('floating-home-btn').classList.remove('hidden'); 
+        document.getElementById('level-counter').classList.remove('hidden'); 
+        updateUI(); 
+    }
+
+    function goHome() {
+        currentStep = 0;
+        fund = 3000;
+        stamina = 100;
+        harmony = 50;
+        fame = 50;
+        previousHarmony = 50; 
+        document.documentElement.style.setProperty('--danger', 0); 
+        
+        updateUI();
+
+        document.getElementById('game-container').classList.add('hidden');
+        document.getElementById('result').classList.add('hidden');
+        document.getElementById('content').classList.remove('hidden');
+        document.getElementById('home-screen').classList.remove('hidden');
+        
+        document.getElementById('floating-home-btn').classList.add('hidden');
+        document.getElementById('level-counter').classList.add('hidden');
+    }
+
+    // --- BỘ 31 TÌNH HUỐNG (ĐẢM BẢO CHẠM MỐC THẮNG/THUA) ---
+    const scenarios = [
+        {
+            text: "Con lớn đang học năm 4, gặp áp lực đồ án dẫn đến stress nặng, xin tiền đi khóa học 'chữa lành' ở ngoại ô.",
+            a: { text: "Đồng ý: 'Thôi con cứ đi cho khuây khỏa'", fund: -500, harmony: 15, stamina: -10, fame: 0 },
+            b: { text: "Gạt đi: 'Chữa lành cái gì, ở nhà lo học đi, tốn tiền!'", fund: 0, harmony: -20, stamina: 0, fame: 0 }
+        },
+        {
+            text: "Startup tuổi teen: Con út xin tiền mua tài khoản VIP của một app giáo dục mới vì 'bạn bè con ai cũng dùng'.",
+            a: { text: "Mua ngay không tiếc tiền học", fund: -200, harmony: 10, stamina: 0, fame: 0 },
+            b: { text: "Dành thời gian tải app về dùng thử cùng con", fund: 0, harmony: 15, stamina: -15, fame: 0 }
+        },
+        {
+            text: "Loa phường 'gọi hồn' 6h sáng Chủ Nhật, phát danh sách các hộ chưa đóng quỹ, trong đó có nhà bạn do bố bận nhậu quên nộp.",
+            a: { text: "Chạy vội ra nhà văn hóa nộp ngay", fund: -200, stamina: -10, harmony: 0, fame: 0 },
+            b: { text: "Quay ra cằn nhằn bố", fund: 0, stamina: 0, harmony: -15, fame: -10 }
+        },
+        {
+            text: "Bữa cơm căng thẳng: Con lớn đem môn Triết phản bác quan điểm 'sống vừa lòng hàng xóm' của bố. Hai bố con to tiếng.",
+            a: { text: "Đập bàn, dẹp mâm cơm", fund: 0, stamina: 0, harmony: -20, fame: 0 },
+            b: { text: "Khéo léo giảng hòa, chuyển chủ đề", fund: 0, stamina: -15, harmony: 10, fame: 0 }
+        },
+        {
+            text: "Bà hàng xóm 'flexing': Bà Tám sang chơi khoe cháu mới được học bổng, tiện thể chê con nhà mình.",
+            a: { text: "Cười gượng hùa theo chê con mình", fund: 0, stamina: 0, fame: 15, harmony: -15 },
+            b: { text: "Bênh con chằm chặp, mời bà Tám đi về", fund: 0, stamina: 0, fame: -15, harmony: 15 }
+        },
+        {
+            text: "Khủng hoảng MXH: Bà Nội bấm nhầm link lừa đảo 'nhận quà tri ân', máy bị trừ mất 500k và bà đang rất hoảng loạn.",
+            a: { text: "Cằn nhằn bà 'đã không biết dùng còn bấm linh tinh'", fund: -500, stamina: 0, harmony: -20, fame: 0 },
+            b: { text: "Động viên 'của đi thay người' rồi lén chặn web rác", fund: -500, stamina: -15, harmony: 15, fame: 0 }
+        },
+        {
+            text: "Sáng mở cửa, thấy nhà hàng xóm quét rác bay hết sang trước cửa nhà mình.",
+            a: { text: "Cầm chổi ra ngõ chửi đổng trả thù", fund: 0, stamina: 0, fame: -20, harmony: 0 },
+            b: { text: "Lặng lẽ quét dọn cho êm chuyện", fund: 0, stamina: -10, fame: 10, harmony: 0 }
+        },
+        {
+            text: "Họp tổ dân phố: Tối nay bình bầu 'Gia đình văn hóa' bắt buộc tham gia, nhưng cùng lúc đó con út đang sốt.",
+            a: { text: "Nhờ hàng xóm điểm danh hộ để ở nhà chăm con", fund: 0, stamina: 0, fame: -15, harmony: 15 },
+            b: { text: "Ép bố ở nhà chăm con để mẹ đi họp", fund: 0, stamina: 0, harmony: -15, fame: 15 }
+        },
+        {
+            text: "Nạn nhân mua sắm mạng: Bố mua cái máy massage đắt tiền trên mạng nhưng dùng được 2 hôm thì hỏng, mẹ xót tiền cằn nhằn.",
+            a: { text: "Hùa theo mẹ mắng bố", fund: -300, stamina: 0, fame: 0, harmony: -15 },
+            b: { text: "Bênh bố, xoa dịu mẹ và mang máy đi sửa", fund: -100, stamina: -15, fame: 0, harmony: 15 }
+        },
+        {
+            text: "Khoe lương dịp Tết: Bác ruột hỏi 'Cháu làm tháng bao nhiêu? Thằng Tí nhà bác tháng kiếm 50 củ'.",
+            a: { text: "Khai khống lên 60 củ cho oai", fund: 0, stamina: -10, fame: 20, harmony: 0 },
+            b: { text: "Cười trừ bảo 'dạ cháu làm đủ ăn bác ạ'", fund: 0, stamina: 0, fame: -15, harmony: 15 }
+        },
+        {
+            text: "Đám giỗ họ: Dì khuyên bạn nên bỏ việc thành phố về quê 'gần gũi ông bà', ba mẹ có vẻ xiêu lòng.",
+            a: { text: "Phản đối gắt gao ngay giữa đám đông", fund: 0, stamina: 0, fame: -20, harmony: -15 },
+            b: { text: "Gật gù cho qua chuyện rồi về nhà thủ thỉ giải thích sau", fund: 0, stamina: -15, fame: 15, harmony: 15 }
+        },
+        {
+            text: "Mẹ dạo này nghiện lướt Tiktok, ngày nào shipper cũng giao một đống đồ gia dụng 'vô tri'.",
+            a: { text: "Tịch thu điện thoại, mắng mẹ tiêu hoang", fund: 0, stamina: 0, fame: 0, harmony: -20 },
+            b: { text: "Nhẫn nhịn thanh toán, lén đem đồ đi cho bớt", fund: -400, stamina: -15, fame: 0, harmony: 15 }
+        },
+        {
+            text: "Ra mắt người yêu: Con út dẫn người yêu về ra mắt, nhưng cậu kia nhuộm tóc xanh đỏ và bấm khuyên mũi.",
+            a: { text: "Tỏ thái độ khó chịu, cấm cản ngay trước mặt", fund: 0, stamina: 0, fame: 15, harmony: -25 },
+            b: { text: "Vẫn tiếp đón lịch sự, nói chuyện riêng với con sau", fund: -200, stamina: -10, fame: -10, harmony: 20 }
+        },
+        {
+            text: "Hóa đơn tiền điện tháng này tăng gấp đôi do các con bật điều hòa thả ga. Bố xót ruột họp gia đình.",
+            a: { text: "Tự giác nhận lỗi và bỏ tiền túi ra đóng", fund: -500, stamina: 0, fame: 0, harmony: 20 },
+            b: { text: "Đổ lỗi cho thời tiết nắng nóng và công ty điện lực", fund: -500, stamina: 0, fame: -10, harmony: -15 }
+        },
+        {
+            text: "Khoe mẽ trót lọt: Bố đi nhậu trót khoe gia đình sắp mua ô tô, giờ hàng xóm ngày nào cũng ra ngõ hỏi 'bao giờ rửa xe?'.",
+            a: { text: "Cắn răng vay mượn mua xe cũ cho bố đỡ bẽ mặt", fund: -1500, stamina: -20, fame: 30, harmony: 0 },
+            b: { text: "Ra ngõ đính chính với hàng xóm là bố lúc say nói đùa", fund: 0, stamina: 0, fame: -25, harmony: -15 }
+        },
+        {
+            text: "Xung đột thế hệ: Bà nội xé tã giấy của cháu chắt vì 'tốn kém, ngày xưa toàn dùng tã vải có sao đâu'.",
+            a: { text: "Mua tã vải về hì hục giặt tay cho bà vui", fund: 0, stamina: -25, fame: 0, harmony: 20 },
+            b: { text: "Lén dùng tã giấy, nói dối là hàng được hãng tặng", fund: -200, stamina: 0, fame: 15, harmony: 10 }
+        },
+        {
+            text: "Vay mượn họ hàng: Chú ruột hỏi vay 20 triệu làm ăn nhưng chú này nổi tiếng là không bao giờ trả nợ.",
+            a: { text: "Từ chối thẳng thừng, nói thẳng lý do", fund: 0, stamina: 0, fame: -20, harmony: -15 },
+            b: { text: "Rút quỹ đưa 5 triệu gọi là 'biếu chú ít vốn'", fund: -500, stamina: -10, fame: 20, harmony: 10 }
+        },
+        {
+            text: "Tin giả nhóm gia đình: Cô gửi link 'ăn tỏi sống chữa ung thư bách bệnh' vào nhóm chat họ tộc, ai cũng tin sái cổ.",
+            a: { text: "Gắt gỏng bảo toàn tin vớ vẩn rồi thoát nhóm", fund: 0, stamina: 0, fame: -15, harmony: -20 },
+            b: { text: "Gửi link bài báo khoa học đính chính nhẹ nhàng", fund: 0, stamina: -10, fame: 10, harmony: 15 }
+        },
+        {
+            text: "Bữa cơm họ: Các bác trai ngồi nhậu nhẹt chén chú chén anh, các bác gái và thanh niên nữ bị gọi xuống bếp dọn dẹp đống mâm bát khổng lồ.",
+            a: { text: "Bảo chị em gái cứ làm đi cho vui lòng người lớn", fund: 0, stamina: -20, fame: 20, harmony: -15 },
+            b: { text: "Đứng lên rủ rê cả mấy anh em trai cùng xuống bếp rửa bát", fund: 0, stamina: -10, fame: -25, harmony: 25 }
+        },
+        {
+            text: "Bệnh thành tích: Con giữa được điểm kém môn Toán. Trường có phong trào lớp chọn, cô giáo gọi điện gợi ý cho con đi 'học thêm nhà cô' để vớt điểm.",
+            a: { text: "Cắn răng đóng tiền đi học thêm nhà cô cho đẹp học bạ", fund: -400, stamina: 0, fame: 20, harmony: -10 },
+            b: { text: "Không học thêm, khuyên con cứ học theo sức của mình", fund: 0, stamina: 0, fame: -15, harmony: 15 }
+        },
+        {
+            text: "Cả nhà đang ăn, nhưng ai cũng cắm mặt vào điện thoại. Mẹ nhìn bạn như chờ bạn nói gì đó.",
+            a: { text: "Tiếp tục lướt điện thoại (vì đang chat chuyện quan trọng)", fund: 0, harmony: -15, stamina: 0, fame: 5 },
+            b: { text: "Cất điện thoại, chủ động mở câu chuyện", fund: 0, harmony: 15, stamina: 0, fame: -5 }
+        },
+        {
+            text: "Ba mẹ không thích người bạn thân của bạn vì gia cảnh nhà họ phức tạp.",
+            a: { text: "Bắt đầu giãn ra, ít chơi với bạn lại", fund: 0, harmony: 15, stamina: 0, fame: 10 },
+            b: { text: "Vẫn chơi thân và lén lút giúp đỡ bạn", fund: -200, harmony: -15, stamina: -10, fame: -10 }
+        },
+        {
+            text: "Bạn vô tình làm hỏng bình rượu ngâm quý của bố.",
+            a: { text: "Lén dọn sạch rồi đổ lỗi cho con mèo", fund: 0, harmony: -20, stamina: 0, fame: 10 },
+            b: { text: "Nói thật, chịu phạt và đền tiền mua bình mới", fund: -400, harmony: 15, stamina: -5, fame: -5 }
+        },
+        {
+            text: "Gia đình muốn bạn thi viên chức nhà nước cho ổn định, nhưng bạn muốn làm Freelancer tự do.",
+            a: { text: "Nghe theo gia đình, cất gọn đam mê", fund: 0, harmony: 20, stamina: -15, fame: 20 },
+            b: { text: "Cãi lời gia đình, quyết tâm tự bươn chải", fund: -300, harmony: -20, stamina: -10, fame: -15 }
+        },
+        {
+            text: "Bạn có cơ hội thăng tiến đổi đời nhưng phải ra nước ngoài làm việc 5 năm.",
+            a: { text: "Bỏ lại tất cả để theo đuổi sự nghiệp", fund: 500, harmony: -25, stamina: -10, fame: 25 },
+            b: { text: "Từ chối cơ hội để ở lại chăm sóc ba mẹ già", fund: -200, harmony: 25, stamina: 0, fame: -15 }
+        },
+        {
+            text: "Đang lướt web xem nội dung nhạy cảm thì mẹ bất ngờ bước vào mượn máy tính.",
+            a: { text: "Tắt phụt màn hình, giả vờ máy bị đơ", fund: 0, harmony: -15, stamina: -5, fame: 0 },
+            b: { text: "Chuyển tab siêu nhanh sang mở video ca nhạc Bolero", fund: 0, harmony: 10, stamina: -10, fame: 5 }
+        },
+        {
+            text: "Em gái nằng nặc đòi mua điện thoại iPhone đời mới nhất để không 'thua thiệt' bạn bè.",
+            a: { text: "Cưng chiều em, rút tiền quỹ ra mua trả góp", fund: -600, harmony: 10, stamina: 0, fame: 15 },
+            b: { text: "Mắng cho một trận vì tội đua đòi", fund: 0, harmony: -20, stamina: 0, fame: -10 }
+        },
+        {
+            text: "Chú chó cưng cắn rách đôi giày hàng hiệu của cậu bạn thân bạn mới mua.",
+            a: { text: "Đền tiền giày mới cho bạn, đánh đòn cún cưng", fund: -500, harmony: -10, stamina: 0, fame: 15 },
+            b: { text: "Xin lỗi bạn qua loa rồi bênh vực cún", fund: 0, harmony: 15, stamina: 0, fame: -25 }
+        },
+        {
+            text: "Gia đình gặp biến cố tài chính, phải bán đất. Có người trả giá cao nhưng yêu cầu đuổi ông bà nội đi nơi khác.",
+            a: { text: "Đồng ý bán để giải quyết nợ nần trước mắt", fund: 1500, harmony: -40, stamina: -20, fame: -30 },
+            b: { text: "Cương quyết không bán, cả nhà cùng rau cháo qua ngày", fund: -500, harmony: 30, stamina: -20, fame: 15 }
+        },
+        {
+            text: "Bạn phát hiện anh/chị mình đang lén lút quen một người đã có gia đình.",
+            a: { text: "Làm ầm ĩ lên cho ba mẹ biết để ngăn chặn", fund: 0, harmony: -30, stamina: -15, fame: -20 },
+            b: { text: "Giữ bí mật, tự mình gặp mặt giải quyết", fund: 0, harmony: 15, stamina: -20, fame: 10 }
+        },
+        {
+            text: "Cú lừa ngàn đô: Con lớn bị lừa rút sổ tiết kiệm đóng vào 'khóa học chữa lành' đa cấp tâm lý.",
+            a: { text: "Làm ầm lên trình báo công an (Có 50% cơ hội đòi lại tiền)", isRandom: true, fame: -50, harmony: -30, stamina: 0 },
+            b: { text: "Cắn răng chịu mất tiền, âm thầm đi vay mượn giấu họ hàng", fund: -1000, stamina: -40, fame: 0, harmony: 0 }
+        }
+    ];
+
+    function updateUI() {
+        if (currentStep < scenarios.length) {
+            const s = scenarios[currentStep];
+            document.getElementById('question').innerText = s.text;
+            document.getElementById('btnA').innerText = s.a.text;
+            document.getElementById('btnB').innerText = s.b.text;
+            
+            document.getElementById('fund').innerText = fund;
+            document.getElementById('stamina').innerText = stamina;
+            document.getElementById('harmony').innerText = harmony;
+            document.getElementById('fame').innerText = fame;
+            
+            document.getElementById('level-counter').innerText = `Tình huống: ${currentStep + 1} / ${scenarios.length}`;
+
+            // TÍNH TOÁN ĐỘ TỐI CỦA NỀN
+            let dangerLevel = (50 - harmony) / 50;
+            if (dangerLevel < 0) dangerLevel = 0;
+            if (dangerLevel > 1) dangerLevel = 1;
+            document.documentElement.style.setProperty('--danger', dangerLevel);
+
+            // HIỆU ỨNG GLITCH
+            if (harmony <= 30 && harmony < previousHarmony) {
+                document.body.classList.add('glitch-effect');
+                setTimeout(() => { document.body.classList.remove('glitch-effect'); }, 600); 
+            }
+            previousHarmony = harmony; 
+
+        } else {
+            showEndGame();
+        }
+    }
+
+    function handleChoice(choice) {
+        const effects = scenarios[currentStep][choice];
+        
+        stamina += effects.stamina || 0;
+        harmony += effects.harmony || 0;
+        fame += effects.fame || 0;
+        
+        // --- XỬ LÝ NHÂN PHẨM CÂU CUỐI ---
+        if (effects.isRandom) {
+            let luck = Math.random(); 
+            if (luck < 0.5) {
+                alert("🍀 MAY MẮN: Công an đã tóm được đường dây lừa đảo. Gia đình bạn LẤY LẠI ĐƯỢC TOÀN BỘ SỐ TIỀN!");
+            } else {
+                alert("💀 XUI XẺO: Bọn lừa đảo đã tẩu tán tài sản sang nước ngoài. Gia đình bạn MẤT TRẮNG 1,000k!");
+                fund -= 1000;
+            }
+        } else {
+            fund += effects.fund || 0;
+        }
+        
+        // CHẶN ĐIỂM
+        if (harmony > 100) harmony = 100;
+        if (harmony < 0) harmony = 0;
+        if (fame > 100) fame = 100;
+        if (fame < 0) fame = 0;
+        if (stamina > 100) stamina = 100;
+        if (stamina < 0) stamina = 0;
+        
+        currentStep++;
+        
+        // ĐIỀU KIỆN KẾT THÚC
+        if (harmony === 100 || fame === 100 || stamina === 0 || fund < 0 || currentStep >= scenarios.length) {
+            showEndGame();
+        } else {
+            updateUI();
+        }
+    }
+
+    function showEndGame() {
+        // ĐỒNG BỘ UI
+        document.getElementById('fund').innerText = fund;
+        document.getElementById('stamina').innerText = stamina;
+        document.getElementById('harmony').innerText = harmony;
+        document.getElementById('fame').innerText = fame;
+
+        document.getElementById('content').classList.add('hidden');
+        document.getElementById('result').classList.remove('hidden');
+        document.getElementById('floating-home-btn').classList.add('hidden');
+        document.getElementById('level-counter').classList.add('hidden');
+
+        // JUMP SCARE
+        if (harmony < 40) {
+            const scareContainer = document.getElementById('scare-container');
+            scareContainer.classList.remove('hidden');
+            setTimeout(() => { scareContainer.classList.add('hidden'); }, 500); 
+        }
+        
+        // TỔNG KẾT
+        let msg = `📊 BÁO CÁO TÀI SẢN & TINH THẦN:\n💰 Quỹ: ${fund}k | ❤️ Thể lực: ${stamina}/100\n🏠 Hòa khí: [${harmony}/100] | 🏆 Danh tiếng: [${fame}/100]\n\n`;
+        
+        if (fund < 0) {
+            msg += "🚨 GIA ĐÌNH PHÁ SẢN! 🚨\nQuỹ gia đình đã âm và rơi vào cảnh nợ nần. Hạnh phúc không thể xây dựng trên một nền tảng tài chính sụp đổ!";
+        }
+        else if (stamina === 0) {
+            msg += "🚨 NÓC NHÀ SỤP ĐỔ! 🚨\nThể lực Mẹ đã cạn kiệt. Bạn đã hy sinh quá nhiều tâm sức để lo toan. Hãy nhớ, người mẹ có khỏe mạnh thì gia đình mới hạnh phúc!";
+        }
+        else if (harmony === 100) {
+            msg += "🏆 CHIẾN THẮNG TUYỆT ĐỐI! 🏆\nBạn đã đạt 100 điểm Hòa khí.\nBạn xây dựng được một gia đình cực kỳ viên mãn, thấu hiểu và gắn kết, mặc kệ những lời đàm tiếu bên ngoài!";
+        } 
+        else if (fame === 100) {
+            msg += "🏆 CHIẾN THẮNG DANH VỌNG! 🏆\nBạn đã đạt 100 điểm Danh tiếng.\nTrong mắt xã hội và họ hàng, gia đình bạn là chuẩn mực của sự hoàn hảo và thành đạt!";
+        } 
+        else {
+            msg += "KẾT THÚC CHẶNG ĐƯỜNG!\nBài học: Chẳng có gia đình nào hoàn hảo 100%.\n";
+            if (fame > harmony) {
+                msg += "Bạn khá chú trọng vẻ bề ngoài và thể diện, nhưng bên trong gia đình đang dần xuất hiện những khoảng trống.";
+            } else if (harmony > fame) {
+                msg += "Bạn đã chọn sống thật với hạnh phúc bên trong thay vì chạy theo những lời khen sáo rỗng của xã hội.";
+            } else {
+                msg += "Bạn giữ được sự cân bằng khá tốt giữa kinh tế, thể diện xã hội và tình cảm gia đình!";
+            }
+        }
+        
+        document.getElementById('final-message').innerText = msg;
+    }
+</script>
+
+</body>
+</html>

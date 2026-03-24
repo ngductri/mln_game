@@ -3,308 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gia Đình Văn Hóa - Game Lựa Chọn</title>
-    <link rel="stylesheet" href="mln131_font.css">
+    <title>Gia Đình Trong Thời Kỳ Quá Độ Lên CNXH</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="scare-container" class="hidden scare-container">
-    <img src="your_image.jpg" alt="Cảnh báo! Caution" class="scare-img">
-</div>
-
-<div id="home-screen" class="home-screen">
-    <h1 class="game-title">
-        <span style="font-size: 0.5em; display: block; margin-bottom: -10px; color: #fff; text-shadow: none; letter-spacing: 1px;">Chào mừng tới</span>
-        Gia Đình Văn Hóa
-    </h1>
-    
-    <div class="menu-btns">
-        <button onclick="startGame()">Bắt đầu</button>
-        <button onclick="showGuide()">Hướng dẫn</button>
-    </div>
-</div>
-
-<div id="guide-modal" class="modal-overlay hidden">
-    <div class="modal-plaque">
-        <h2>Cách Chơi 🎮</h2>
-        <p>Chào mừng bạn đến với <strong>Gia Đình Văn Hóa</strong>!</p>
-        <p>Bạn sẽ đối mặt với các tình huống gia đình thường ngày. Mỗi lựa chọn sẽ ảnh hưởng đến 2 chỉ số:</p>
-        <ul style="list-style-type: none; padding: 0;">
-            <li><strong>🏠 Hòa khí:</strong> Sự êm ấm, hạnh phúc thực sự bên trong.</li>
-            <li><strong>🏆 Danh tiếng:</strong> Vẻ bề ngoài, thể diện với xã hội.</li>
-        </ul>
-        <p><em>*Trò chơi kết thúc khi bạn đạt 100 điểm ở một trong hai chỉ số, hoặc vượt qua hết 21 tình huống!</em></p>
-        <button onclick="closeGuide()" class="guide-btn">Đã hiểu!</button>
-    </div>
-</div>
-
-<div id="level-counter" class="level-badge hidden">Tình huống: 1/21</div>
-
-<button id="floating-home-btn" onclick="goHome()" class="btn-home-floating hidden">Trang chủ</button>
-
-<div id="game-container" class="hidden">
-    <div class="stats">
-        <div class="stat-item">🏠 Hòa khí: <span id="harmony">50</span></div>
-        <div class="stat-item">🏆 Danh tiếng: <span id="fame">50</span></div>
-    </div>
-
-    <div id="content">
-        <p id="question">Đang tải tình huống...</p>
-        <div class="btn-container">
-            <button onclick="handleChoice('a')" id="btnA">Lựa chọn A</button>
-            <button onclick="handleChoice('b')" id="btnB">Lựa chọn B</button>
+    <header>
+        <div class="container">
+            <h1>Xây Dựng Gia Đình Việt Nam</h1>
+            <p>Thời kỳ quá độ lên Chủ nghĩa xã hội</p>
         </div>
-        <p id="message"></p>
-    </div>
+    </header>
 
-    <div id="result" class="hidden">
-        <h2>Kết thúc!</h2>
-        <p id="final-message" style="white-space: pre-wrap; font-size: 1.1rem; line-height: 1.6;"></p>
-        <button onclick="goHome()">Chơi lại từ đầu</button>
-    </div>
-</div>
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="#khai-niem">Khái Niệm & Vị Trí</a></li>
+                <li><a href="#co-so">Cơ Sở Xây Dựng</a></li>
+                <li><a href="#bien-doi">Sự Biến Đổi & Phương Hướng</a></li>
+                <li><a href="#phong-chong">Phòng Chống Bạo Lực</a></li>
+                <li><a href="#game">Góc Giải Trí</a></li>
+            </ul>
+        </div>
+    </nav>
 
-<script>
-    window.onload = function() { showGuide(); }
+    <main class="container">
+        <section id="khai-niem">
+            <h2>I. Khái niệm, vị trí và chức năng của gia đình</h2>
+            <article>
+                <h3>1. Khái niệm gia đình</h3>
+                <div class="definition-container">
+                    <p>
+                        Gia đình là một hình thức cộng đồng xã hội đặc biệt, được hình thành, duy trì và củng cố chủ yếu dựa trên cơ sở hôn nhân, quan hệ huyết thống và quan hệ nuôi dưỡng, cùng với những quy định về quyền và nghĩa vụ của các thành viên.
+                    </p>
+                    <div class="image-box">
+                        <img src="family.jpg" alt="Hình ảnh minh họa về gia đình" class="full-width-image">
+                    </div>
+                </div>
+                
+                <h3>2. Vị trí của gia đình trong xã hội</h3>
+                <div class="position-grid">
+                    <div class="position-card">
+                        <div class="icon">🧬</div>
+                        <h4>Tế bào của xã hội</h4>
+                        <p>Gia đình có vai trò quyết định đối với sự tồn tại, vận động và phát triển của xã hội.</p>
+                    </div>
+                    <div class="position-card">
+                        <div class="icon">🏡</div>
+                        <h4>Tổ ấm của mỗi người</h4>
+                        <p>Mang lại các giá trị hạnh phúc, sự hài hòa trong đời sống cá nhân và nuôi dưỡng những công dân tốt.</p>
+                    </div>
+                    <div class="position-card">
+                        <div class="icon">🌉</div>
+                        <h4>Cầu nối cá nhân - xã hội</h4>
+                        <p>Nơi xã hội truyền đạt các chủ trương, chính sách, tác động trực tiếp đến việc hình thành nhân cách.</p>
+                    </div>
+                </div>
 
-    function showGuide() { document.getElementById('guide-modal').classList.remove('hidden'); }
-    function closeGuide() { document.getElementById('guide-modal').classList.add('hidden'); }
+                <h3>3. Các chức năng cơ bản của gia đình</h3>
+                <div class="grid">
+                    <div class="card">Tái sản xuất ra con người</div>
+                    <div class="card">Nuôi dưỡng và giáo dục</div>
+                    <div class="card">Thỏa mãn nhu cầu tâm sinh lý</div>
+                </div>
+            </article>
+        </section>
 
-    function startGame() {
-        document.getElementById('home-screen').classList.add('hidden');
-        document.getElementById('game-container').classList.remove('hidden');
-        document.getElementById('floating-home-btn').classList.remove('hidden'); 
-        document.getElementById('level-counter').classList.remove('hidden'); 
-        updateUI(); 
-    }
+        <hr>
 
-    function goHome() {
-        currentStep = 0;
-        harmony = 50;
-        fame = 50;
-        previousHarmony = 50; 
-        document.documentElement.style.setProperty('--danger', 0); // Reset màu nền về sáng
-        
-        updateUI();
+        <section id="co-so">
+            <h2>II. Cơ sở xây dựng gia đình trong thời kỳ quá độ</h2>
+            <div class="base-grid">
+                <div class="base-item">
+                    <h4>Cơ sở Kinh tế - Xã hội</h4>
+                    <p>Phát triển lực lượng sản xuất và hình thành quan hệ sản xuất XHCN, xóa bỏ chế độ tư hữu.</p>
+                </div>
+                <div class="base-item">
+                    <h4>Cơ sở Chính trị - Xã hội</h4>
+                    <p>Thiết lập nhà nước XHCN và hệ thống pháp luật để bảo vệ hạnh phúc gia đình.</p>
+                </div>
+                <div class="base-item">
+                    <h4>Cơ sở Văn hóa</h4>
+                    <p>Nền tảng tư tưởng giai cấp công nhân; phát triển giáo dục và khoa học.</p>
+                </div>
+                <div class="base-item">
+                    <h4>Chế độ Hôn nhân tiến bộ</h4>
+                    <p>Tự nguyện; một vợ một chồng, vợ chồng bình đẳng; được pháp luật bảo vệ.</p>
+                </div>
+            </div>
+        </section>
 
-        document.getElementById('game-container').classList.add('hidden');
-        document.getElementById('result').classList.add('hidden');
-        document.getElementById('content').classList.remove('hidden');
-        document.getElementById('home-screen').classList.remove('hidden');
-        
-        document.getElementById('floating-home-btn').classList.add('hidden');
-        document.getElementById('level-counter').classList.add('hidden');
-    }
+        <hr>
 
-    // DANH SÁCH 21 TÌNH HUỐNG
-    const scenarios = [
-        {
-            text: "Cả nhà đang ăn, nhưng ai cũng cắm mặt vào điện thoại. Mẹ nhìn bạn như chờ bạn nói gì đó.",
-            a: { text: "Tiếp tục lướt điện thoại (vì đang chat chuyện quan trọng)", harmony: -15, fame: 10 },
-            b: { text: "Cất điện thoại, chủ động mở câu chuyện", harmony: 15, fame: -10 }
-        },
-        {
-            text: "Bạn vừa thi trượt một môn quan trọng. Ba mẹ đang rất kỳ vọng.",
-            a: { text: "Giấu đi, đợi sửa sai rồi nói", harmony: -15, fame: 15 },
-            b: { text: "Nói thật ngay", harmony: 20, fame: -10 }
-        },
-        {
-            text: "Ba mẹ không thích người bạn thân của bạn.",
-            a: { text: "Vẫn tiếp tục chơi với bạn", harmony: -10, fame: 15 },
-            b: { text: "Giữ khoảng cách", harmony: 15, fame: -10 }
-        },
-        {
-            text: "Bạn được offer học/làm ở nơi rất xa, nhưng gia đình cần bạn ở gần.",
-            a: { text: "Đi vì tương lai", harmony: -20, fame: 25 },
-            b: { text: "Ở lại vì gia đình", harmony: 20, fame: -15 }
-        },
-        {
-            text: "Bạn vô tình làm hỏng một món đồ giá trị trong nhà.",
-            a: { text: "Giấu đi xem như không biết", harmony: -15, fame: 10 },
-            b: { text: "Nói thật và nhận lỗi", harmony: 15, fame: -5 }
-        },
-        {
-            text: "Ba mẹ so sánh bạn với “con nhà người ta”.",
-            a: { text: "Im lặng chịu đựng", harmony: 10, fame: -5 },
-            b: { text: "Nói ra cảm xúc của mình", harmony: -10, fame: 15 }
-        },
-        {
-            text: "Bạn muốn đi chơi đêm nhưng biết chắc ba mẹ sẽ không cho.",
-            a: { text: "Nói dối để được đi", harmony: -15, fame: 15 },
-            b: { text: "Nói thật", harmony: 15, fame: -10 }
-        },
-        {
-            text: "Gia đình gặp khó khăn tài chính, bạn đang có một khoản tiền riêng.",
-            a: { text: "Giữ tiền cho kế hoạch cá nhân", harmony: -20, fame: 15 },
-            b: { text: "Đưa tiền hỗ trợ gia đình", harmony: 25, fame: -15 }
-        },
-        {
-            text: "Gia đình muốn bạn theo ngành ổn định, nhưng bạn có đam mê riêng.",
-            a: { text: "Nghe theo gia đình", harmony: 15, fame: 10 },
-            b: { text: "Quyết tâm theo đam mê", harmony: -15, fame: 20 }
-        },
-        {
-            text: "Bạn có cơ hội đổi đời nhưng phải xa gia đình nhiều năm.",
-            a: { text: "Chọn thành công cá nhân", harmony: -25, fame: 25 },
-            b: { text: "Chọn gia đình", harmony: 25, fame: -15 }
-        },
-        {
-            text: "Bạn đang xem nội dung 18+ trên máy tính, ba/mẹ bất ngờ bước vào.",
-            a: { text: "Tắt nhanh, giả vờ không có gì", harmony: -10, fame: 5 },
-            b: { text: "Thừa nhận và giải thích", harmony: 15, fame: -10 }
-        },
-        {
-            text: "Tết đến, họ hàng dắt con cháu sang chơi đông đúc. Tài chính năm nay của bạn rất eo hẹp.",
-            a: { text: "Lì xì thật nhiều để giữ thể diện với họ hàng", harmony: -20, fame: 20 },
-            b: { text: "Lì xì ít nhưng mừng tuổi bằng những lời chúc chân thành", harmony: 15, fame: -15 }
-        },
-        {
-            text: "Trong mâm cỗ họ, các bác trai ngồi nhậu, các bác gái và thanh niên nữ bị gọi xuống bếp dọn dẹp.",
-            a: { text: "Bảo chị em gái cứ làm đi cho vui lòng người lớn", harmony: -15, fame: 15 },
-            b: { text: "Rủ rê cả mấy anh em trai cùng xuống bếp rửa bát", harmony: 20, fame: -20 }
-        },
-        {
-            text: "Con em trong nhà nhuộm tóc màu sáng và mặc đồ phá cách. Họ hàng đến chơi và xì xầm đánh giá.",
-            a: { text: "Bắt em đi nhuộm lại tóc đen và thay đồ ngay lập tức", harmony: -20, fame: 15 },
-            b: { text: "Nhẹ nhàng giải thích đó là sở thích và bênh vực em", harmony: 20, fame: -15 }
-        },
-        {
-            text: "Hàng xóm khoe con họ vừa mua được ô tô tiền tỷ. Bạn đời của bạn tỏ vẻ chạnh lòng.",
-            a: { text: "Cố vay mượn mua một chiếc xe trả góp để không thua kém", harmony: -25, fame: 25 },
-            b: { text: "An ủi bạn đời, trân trọng những gì cả hai đang có", harmony: 20, fame: -10 }
-        },
-        {
-            text: "Ông bà nội kiên quyết bắt cháu nhỏ uống một bài thuốc nam truyền miệng không rõ nguồn gốc.",
-            a: { text: "Cho cháu uống một chút để ông bà vui lòng", harmony: -20, fame: 10 },
-            b: { text: "Cương quyết từ chối và giải thích theo cơ sở y khoa", harmony: 15, fame: -15 }
-        },
-        {
-            text: "Thú cưng trong nhà lỡ phóng uế đúng lúc khách quý bước vào cửa.",
-            a: { text: "Đánh đuổi thú cưng và rối rít xin lỗi khách", harmony: -15, fame: 10 },
-            b: { text: "Bình tĩnh dọn dẹp, cười xòa coi như chuyện vui nhỏ", harmony: 15, fame: -10 }
-        },
-        {
-            text: "Nhà có đám cưới, họ hàng thúc ép phải làm 100 mâm cỗ đãi làng, nhưng ngân sách chỉ đủ 30 mâm.",
-            a: { text: "Cắn răng đi vay mượn làm lớn cho 'mát mặt' với làng xóm", harmony: -25, fame: 25 },
-            b: { text: "Chỉ mời gia đình cốt cán và bạn bè thân thiết", harmony: 25, fame: -20 }
-        },
-        {
-            text: "Bạn vô tình đăng một đoạn video hài hước nhưng hơi 'dìm hàng' người nhà lên Facebook. Hàng xóm bắt đầu bàn tán.",
-            a: { text: "Xóa ngay lập tức và cáu gắt với người nhà", harmony: -15, fame: 15 },
-            b: { text: "Giữ lại làm kỷ niệm và cùng cả nhà ngồi cười", harmony: 15, fame: -15 }
-        },
-        {
-            text: "Bạn phát hiện anh/chị của mình đang lén lút quen người yêu mà gia đình rất ác cảm.",
-            a: { text: "Lập tức mách lại với ba mẹ để cấm cản", harmony: -20, fame: 15 },
-            b: { text: "Giữ bí mật và động viên anh/chị tự tìm cách thuyết phục", harmony: 20, fame: -10 }
-        },
-        {
-            text: "Một người thân trong nhà thừa nhận họ đang bị trầm cảm nặng và muốn đi khám tâm lý.",
-            a: { text: "Bảo họ chỉ là 'yếu đuối', cấm đi khám vì sợ hàng xóm dị nghị", harmony: -30, fame: 15 },
-            b: { text: "Lắng nghe, ôm họ và lập tức tìm bác sĩ hỗ trợ", harmony: 30, fame: -20 }
-        }
-    ];
+        <section id="bien-doi">
+            <h2>III. Xây dựng gia đình Việt Nam hiện nay</h2>
+            <div class="content-box">
+                <h3>1. Sự biến đổi hiện nay</h3>
+                <div class="transformation-grid">
+                    <div class="transformation-card">
+                        <h4>Quy mô & Kết cấu</h4>
+                        <p>Gia đình có xu hướng thu nhỏ lại; đồng thời gia tăng các mô hình mới như hộ gia đình đơn thân, độc thân, kết hôn đồng tính, phá vỡ kiểu gia đình truyền thống.</p>
+                        <img src="marriage.jpg" alt="Biến đổi quy mô" class="card-image">
+                    </div>
+                    <div class="transformation-card">
+                        <h4>Chức năng</h4>
+                        <p>Việc giáo dục trẻ em đôi khi bị phó mặc cho nhà trường, thiếu đi sự dạy bảo thường xuyên của ông bà, cha mẹ; người cao tuổi đối mặt với sự cô đơn.</p>
+                        <img src="children_education.jpg" alt="Biến đổi chức năng" class="card-image">
+                    </div>
+                    <div class="transformation-card">
+                        <h4>Quan hệ gia đình</h4>
+                        <p>Không còn duy nhất mô hình đàn ông làm chủ gia đình. Thách thức lớn nhất là sự mâu thuẫn giữa các thế hệ do khác biệt về tuổi tác, hệ giá trị và chuẩn mực văn hóa.</p>
+                        <img src="review-phim-chang-vo-cua-em-phim-viet-xuat-sac-nhat-tu-dau-nam_62381ad118b3f.jpeg" alt="Biến đổi quan hệ" class="card-image">
+                    </div>
+                </div>
 
-    let currentStep = 0;
-    let harmony = 50;
-    let fame = 50;
-    let previousHarmony = 50; 
+                <h3>2. Phương hướng cơ bản</h3>
+                <ol>
+                    <li>Tăng cường sự lãnh đạo của Đảng và nâng cao nhận thức xã hội về vị trí của gia đình.</li>
+                    <li>Đẩy mạnh phát triển kinh tế - xã hội, nâng cao đời sống vật chất và hỗ trợ kinh tế hộ gia đình.</li>
+                    <li>Kế thừa giá trị truyền thống tốt đẹp đồng thời tiếp thu các giá trị tiên tiến của nhân loại về gia đình.</li>
+                    <li>Phát triển phong trào Nâng cao chất lượng phong trào xây dựng gia đình văn hóa để làm cho gia đình thực sự là tế bào lành mạnh của xã hội.</li>
+                </ol>
+            </div>
+        </section>
 
-    function updateUI() {
-        if (currentStep < scenarios.length) {
-            const s = scenarios[currentStep];
-            document.getElementById('question').innerText = s.text;
-            document.getElementById('btnA').innerText = s.a.text;
-            document.getElementById('btnB').innerText = s.b.text;
-            document.getElementById('harmony').innerText = harmony;
-            document.getElementById('fame').innerText = fame;
-            
-            document.getElementById('level-counter').innerText = `Tình huống: ${currentStep + 1} / ${scenarios.length}`;
+        <hr>
 
-            // TÍNH TOÁN ĐỘ TỐI CỦA NỀN
-            let dangerLevel = (50 - harmony) / 50;
-            if (dangerLevel < 0) dangerLevel = 0;
-            if (dangerLevel > 1) dangerLevel = 1;
-            document.documentElement.style.setProperty('--danger', dangerLevel);
+        <section id="phong-chong">
+            <div class="highlight-section">
+                <h2>IV. Phòng chống bạo lực gia đình</h2>
+                <p>
+                    Phòng chống bạo lực gia đình là một nội dung quan trọng trong việc xây dựng và phát triển gia đình Việt Nam thời kỳ quá độ lên chủ nghĩa xã hội, nhằm bảo vệ "tế bào" của xã hội và đảm bảo quyền con người.
+                </p>
 
-            // HIỆU ỨNG GLITCH
-            if (harmony <= 30 && harmony < previousHarmony) {
-                document.body.classList.add('glitch-effect');
-                setTimeout(() => {
-                    document.body.classList.remove('glitch-effect');
-                }, 600); 
-            }
-            previousHarmony = harmony; 
+                <div class="image-box" style="margin-bottom: 2rem;">
+                    <img src="Domestic-and-family-violence.jpg" alt="Phòng chống bạo lực gia đình" class="full-width-image">
+                </div>
 
-        } else {
-            showEndGame();
-        }
-    }
+                <h3>1. Thực trạng và thách thức</h3>
+                <p>
+                    Trong bối cảnh hiện nay, gia đình Việt Nam đang đối mặt với nhiều hiện tượng tiêu cực như bạo lực gia đình, ly hôn, ly thân, ngoại tình và sự xâm hại tình dục. Những hành vi này làm rạn nứt, phá hoại sự bền vững của gia đình, khiến cho mối liên kết giữa các thành viên trở nên mong manh và dễ tan vỡ. Bạo lực gia đình thường nảy sinh từ các mâu thuẫn thế hệ, sự lỏng lẻo trong quan hệ tình cảm và áp lực từ những mặt trái của cơ chế thị trường.
+                </p>
 
-    function handleChoice(choice) {
-        const effects = scenarios[currentStep][choice];
-        harmony += effects.harmony;
-        fame += effects.fame;
-        
-        // CHẶN ĐIỂM TỪ 0 ĐẾN 100
-        if (harmony > 100) harmony = 100;
-        if (harmony < 0) harmony = 0;
-        if (fame > 100) fame = 100;
-        if (fame < 0) fame = 0;
-        
-        currentStep++;
-        
-        if (harmony === 100 || fame === 100 || currentStep >= scenarios.length) {
-            showEndGame();
-        } else {
-            updateUI();
-        }
-    }
+                <h3>2. Cơ sở và giải pháp phòng chống bạo lực gia đình</h3>
+                <p>Để ngăn chặn và đẩy lùi bạo lực gia đình, cần thực hiện đồng bộ các giải pháp sau:</p>
+                
+                <div class="base-grid" style="margin-top: 1.5rem;">
+                    <div class="base-item">
+                        <h4>Tăng cường vai trò của Pháp luật và Nhà nước</h4>
+                        <p>Nhà nước sử dụng hệ thống pháp luật, đặc biệt là Luật Hôn nhân và Gia đình, để định hướng và thúc đẩy quá trình hình thành gia đình mới, bảo vệ hạnh phúc và quyền lợi của các thành viên. Cần kiên quyết đấu tranh và xử lý nghiêm minh theo pháp luật các hành vi bạo lực, xâm hại nhân phẩm, đặc biệt là đối với phụ nữ.</p>
+                    </div>
+                    <div class="base-item">
+                        <h4>Xác lập sự bình đẳng giới</h4>
+                        <p>Một trong những cơ sở để xóa bỏ bạo lực là xóa bỏ tư tưởng gia trưởng, độc đoán, chuyên quyền và sự thống trị của người đàn ông trong gia đình. Trong gia đình xã hội chủ nghĩa, vợ và chồng phải có quyền lợi, nghĩa vụ ngang nhau và tôn trọng lẫn nhau.</p>
+                    </div>
+                    <div class="base-item">
+                        <h4>Giáo dục đạo đức và lối sống</h4>
+                        <p>Chức năng nuôi dưỡng, giáo dục của gia đình đóng vai trò hình thành nhân cách và đạo đức. Việc xây dựng con người mới xã hội chủ nghĩa với đạo đức cách mạng, lối sống văn minh, hiện đại là nền tảng tư tưởng trực tiếp để hạn chế bạo lực.</p>
+                    </div>
+                    <div class="base-item">
+                        <h4>Đẩy mạnh phong trào "Gia đình văn hóa"</h4>
+                        <p>Đây là mô hình gia đình tiến bộ, hướng tới sự ấm no, hòa thuận, hạnh phúc và đoàn kết. Phong trào này tác động đến nền tảng gia đình bằng các quy tắc ứng xử tốt đẹp, phát huy giá trị đạo đức truyền thống và nâng cao chất lượng cuộc sống.</p>
+                    </div>
+                    <div class="base-item" style="grid-column: 1 / -1;">
+                        <h4>Sự lãnh đạo của Đảng</h4>
+                        <p>Cần tăng cường sự lãnh đạo của Đảng và nâng cao nhận thức xã hội về vị trí, vai trò của gia đình. Các cấp ủy, chính quyền phải đưa mục tiêu xây dựng gia đình vào chiến lược phát triển kinh tế - xã hội hàng năm.</p>
+                    </div>
+                </div>
 
-    function showEndGame() {
-        // ĐỒNG BỘ UI TRƯỚC KHI HIỆN KẾT THÚC
-        document.getElementById('harmony').innerText = harmony;
-        document.getElementById('fame').innerText = fame;
+                <h3 style="margin-top: 2rem;">3. Trách nhiệm của các thành viên và xã hội</h3>
+                <p>
+                    Việc bảo đảm an toàn và sự bình đẳng giữa các thành viên đòi hỏi phải hình thành những chuẩn mực mới, đảm bảo sự hài hòa lợi ích giữa cá nhân, gia đình và xã hội. Bên cạnh sự tự nỗ lực của các thành viên gia đình, các tổ chức chính trị - xã hội cũng cần tham gia tích cực vào việc giám sát, bảo vệ quyền lợi chính đáng của nhân dân và ngăn chặn các tệ nạn xã hội đe dọa hạnh phúc gia đình.
+                </p>
+                <div class="image-box" style="margin-top: 2rem;">
+                    <img src="R.jpg" alt="Hình ảnh minh họa trách nhiệm của thành viên và xã hội" class="full-width-image">
+                </div>
+            </div>
+        </section>
 
-        document.getElementById('content').classList.add('hidden');
-        document.getElementById('result').classList.remove('hidden');
-        
-        document.getElementById('floating-home-btn').classList.add('hidden');
-        document.getElementById('level-counter').classList.add('hidden');
+        <hr>
 
-        // HIỆU ỨNG JUMP SCARE (0.5 GIÂY)
-        if (harmony < 40) {
-            const scareContainer = document.getElementById('scare-container');
-            scareContainer.classList.remove('hidden');
-            
-            setTimeout(() => {
-                scareContainer.classList.add('hidden');
-            }, 500); 
-        }
-        
-        // TỔNG KẾT VÀ BÀI HỌC
-        let msg = `TỔNG KẾT: Hòa khí [${harmony}/100] - Danh tiếng [${fame}/100]\n\n`;
-        
-        if (harmony === 100) {
-            msg += "🏆 CHIẾN THẮNG TUYỆT ĐỐI! 🏆\nBạn đã đạt 100 điểm Hòa khí.\nBạn xây dựng được một gia đình cực kỳ viên mãn, thấu hiểu và gắn kết, mặc kệ những lời đàm tiếu bên ngoài!";
-        } 
-        else if (fame === 100) {
-            msg += "🏆 CHIẾN THẮNG DANH VỌNG! 🏆\nBạn đã đạt 100 điểm Danh tiếng.\nTrong mắt xã hội và họ hàng, gia đình bạn là chuẩn mực của sự hoàn hảo và thành đạt!";
-        } 
-        else {
-            msg += "KẾT THÚC CHẶNG ĐƯỜNG!\nBài học: Chẳng có gia đình nào hoàn hảo 100%.\n";
-            if (fame > harmony) {
-                msg += "Bạn khá chú trọng vẻ bề ngoài và thể diện, nhưng bên trong gia đình đang dần xuất hiện những khoảng trống.";
-            } else if (harmony > fame) {
-                msg += "Bạn đã chọn sống thật với hạnh phúc bên trong thay vì chạy theo những lời khen sáo rỗng của xã hội.";
-            } else {
-                msg += "Bạn giữ được sự cân bằng khá tốt giữa thể diện với xã hội và tình cảm gia đình!";
-            }
-        }
-        
-        document.getElementById('final-message').innerText = msg;
-    }
-</script>
+        <section id="game" class="game-section">
+            <h2>V. Góc Giải Trí</h2>
+            <p>
+                Sau những nội dung lý thuyết, mời bạn thay đổi không khí và trải nghiệm dự án game nhiều chương hấp dẫn ngay dưới đây. Khám phá từng diễn biến câu chuyện trực tiếp trên trang web, hoặc nhấn nút để mở rộng giao diện.
+            </p>
+
+            <div class="iframe-container">
+                <iframe src="games/index.html" title="Trải nghiệm Game" allowfullscreen></iframe>
+            </div>
+
+            <div class="game-actions">
+                <a href="games/index.html" target="_blank" class="btn-play">🎮 Mở Game Toàn Màn Hình</a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 - Tài liệu học tập Môn Chủ nghĩa xã hội khoa học</p>
+        </div>
+    </footer>
 
 </body>
 </html>
